@@ -1,4 +1,3 @@
-import { validationResult } from 'express-validator';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -30,11 +29,6 @@ export const getSetupStatus = async (req, res) => {
 
 export const register = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ success: false, errors: errors.array() });
-    }
-
     const { name, email, password, phone } = req.body;
 
     if (req.body.role === 'doctor') {
@@ -46,7 +40,7 @@ export const register = async (req, res) => {
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ success: false, message: 'Email already registered.' });
+      return res.status(409).json({ success: false, message: 'Email already registered.' });
     }
 
     const userData = { name, email, password, phone, role: 'patient' };
@@ -74,11 +68,6 @@ export const register = async (req, res) => {
 
 export const registerDoctor = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ success: false, errors: errors.array() });
-    }
-
     const setupSecret = process.env.ADMIN_SETUP_SECRET;
     if (!setupSecret) {
       return res.status(503).json({
@@ -112,7 +101,7 @@ export const registerDoctor = async (req, res) => {
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ success: false, message: 'Email already registered.' });
+      return res.status(409).json({ success: false, message: 'Email already registered.' });
     }
 
     const user = await User.create({
@@ -156,11 +145,6 @@ export const registerDoctor = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ success: false, errors: errors.array() });
-    }
-
     const { email, password, role } = req.body;
 
     const user = await User.findOne({ email }).select('+password');

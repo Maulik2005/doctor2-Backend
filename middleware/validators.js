@@ -1,4 +1,22 @@
-import { body } from 'express-validator';
+import { body, validationResult } from 'express-validator';
+
+export const handleValidation = (req, res, next) => {
+  const result = validationResult(req);
+  if (result.isEmpty()) return next();
+
+  const errors = result.array();
+  const fieldErrors = errors.reduce((acc, err) => {
+    const field = err.path || err.param;
+    if (field && !acc[field]) acc[field] = err.msg;
+    return acc;
+  }, {});
+
+  return res.status(422).json({
+    success: false,
+    message: errors[0].msg,
+    errors: fieldErrors,
+  });
+};
 
 export const registerValidation = [
   body('name').trim().notEmpty().withMessage('Name is required'),

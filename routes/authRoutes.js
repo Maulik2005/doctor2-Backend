@@ -13,14 +13,15 @@ import {
   registerValidation,
   doctorRegisterValidation,
   loginValidation,
+  handleValidation,
 } from '../middleware/validators.js';
 
 const router = Router();
 
 router.get('/setup-status', getSetupStatus);
-router.post('/register', registerValidation, register);
-router.post('/register/doctor', doctorRegisterValidation, registerDoctor);
-router.post('/login', loginValidation, login);
+router.post('/register', registerValidation, handleValidation, register);
+router.post('/register/doctor', doctorRegisterValidation, handleValidation, registerDoctor);
+router.post('/login', loginValidation, handleValidation, login);
 router.get('/me', protect, getMe);
 router.put('/profile', protect, (req, res, next) => {
   uploadProfilePhoto(req, res, (err) => {

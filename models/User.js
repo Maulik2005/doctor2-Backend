@@ -56,7 +56,7 @@ const userSchema = new mongoose.Schema(
     },
     availableSlots: {
       type: [String],
-      default: ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'],
+      default: ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'],
     },
     isActive: {
       type: Boolean,

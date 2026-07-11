@@ -172,7 +172,13 @@ export const getWhatsAppLink = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Not authorized.' });
     }
 
-    const whatsappUrl = buildWhatsAppUrl(appointment, appointment.patient, appointment.doctor);
+    const audience = req.user.role === 'doctor' ? 'doctor' : 'clinic';
+    const whatsappUrl = buildWhatsAppUrl(
+      appointment,
+      appointment.patient,
+      appointment.doctor,
+      audience,
+    );
 
     res.json({ success: true, whatsappUrl });
   } catch (error) {
